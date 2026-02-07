@@ -15,24 +15,35 @@ public class CharacterEntityService {
     @Autowired
     private CharacterEntityRepository characterRepository;
 
-    public List<CharacterEntity> findAll(){
+    public List<CharacterEntity> findAll() {
         return characterRepository.findAll();
     }
 
-    public CharacterEntity createEntity(CharacterEntityRequest characterRequest){
+    public CharacterEntity createEntity(CharacterEntityRequest characterRequest) {
         CharacterEntity ce = new CharacterEntity();
         ce.setName(characterRequest.getName());
         ce.setColor(characterRequest.getColor());
         ce.setAuthorEmail(characterRequest.getAuthorEmail());
         return characterRepository.save(ce);
-
     }
 
-    public CharacterEntity findById(Long id){
+    public CharacterEntity findById(Long id) {
         Optional<CharacterEntity> optionalCharacter = characterRepository.findById(id);
-        if(optionalCharacter.isEmpty()){
+        if (optionalCharacter.isEmpty()) {
             throw new CharacterEntityNotFoundException();
         }
         return optionalCharacter.get();
+    }
+
+    public CharacterEntity update(Long id, CharacterEntityRequest characterRequest) {
+        Optional<CharacterEntity> optionalCharacter = characterRepository.findById(id);
+        if (optionalCharacter.isEmpty()) {
+            throw new CharacterEntityNotFoundException();
+        }
+        CharacterEntity characterEntity = optionalCharacter.get();
+        characterEntity.setName(characterRequest.getName());
+        characterEntity.setColor(characterRequest.getColor());
+        characterEntity.setAuthorEmail(characterRequest.getAuthorEmail());
+        return characterRepository.save(characterEntity);
     }
 }
